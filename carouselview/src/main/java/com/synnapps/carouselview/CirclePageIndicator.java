@@ -66,8 +66,9 @@ public class CirclePageIndicator extends View implements PageIndicator {
 
     private float mIndicatorBorderWidth;
     private float mIndicatorCornerRadius;
-    private final Paint mIndicatorBorderColor = new Paint(ANTI_ALIAS_FLAG);
-    private final Paint mIndicatorFillColor = new Paint(ANTI_ALIAS_FLAG);
+    private int mIndicatorBorderColor;
+    private int mIndicatorFillColor;
+
     
     public CirclePageIndicator(Context context) {
         this(context, null);
@@ -112,8 +113,9 @@ public class CirclePageIndicator extends View implements PageIndicator {
         mIndicatorCornerRadius = a.getDimension(R.styleable.CirclePageIndicator_indicatorCornerRadius, 0);
         mIndicatorBorderColor.setStyle(Style.STROKE);
         mIndicatorFillColor.setStyle(Style.FILL);
-        mIndicatorBorderColor.setColor(a.getColor(R.styleable.CirclePageIndicator_borderMyColor, defaultPageColor));
-        mIndicatorFillColor.setColor(a.getColor(R.styleable.CirclePageIndicator_FillMyColor, defaultPageColor));
+        mIndicatorBorderColor = a.getColor(R.styleable.CirclePageIndicator_borderMyColor, defaultPageColor);
+        mIndicatorFillColor = a.getColor(R.styleable.CirclePageIndicator_FillMyColor, defaultPageColor);
+
             
         Drawable background = a.getDrawable(R.styleable.CirclePageIndicator_android_background);
         if (background != null) {
