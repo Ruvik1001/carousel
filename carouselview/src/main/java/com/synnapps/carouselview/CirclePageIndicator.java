@@ -66,7 +66,9 @@ public class CirclePageIndicator extends View implements PageIndicator {
 
     private float mIndicatorBorderWidth;
     private float mIndicatorCornerRadius;
-
+    private final Paint mIndicatorBorderColor = new Paint(ANTI_ALIAS_FLAG);
+    private final Paint mIndicatorFillColor = new Paint(ANTI_ALIAS_FLAG);
+    
     public CirclePageIndicator(Context context) {
         this(context, null);
     }
@@ -108,7 +110,11 @@ public class CirclePageIndicator extends View implements PageIndicator {
         // Load new attributes
         mIndicatorBorderWidth = a.getDimension(R.styleable.CirclePageIndicator_indicatorBorderWidth, 0);
         mIndicatorCornerRadius = a.getDimension(R.styleable.CirclePageIndicator_indicatorCornerRadius, 0);
-
+        mIndicatorBorderColor.setStyle(Style.STROKE);
+        mIndicatorFillColor.setStyle(Style.FILL);
+        mIndicatorBorderColor.setColor(a.getColor(R.styleable.CirclePageIndicator_borderMyColor, defaultPageColor));
+        mIndicatorFillColor.setColor(a.getColor(R.styleable.CirclePageIndicator_FillMyColor, defaultPageColor));
+            
         Drawable background = a.getDrawable(R.styleable.CirclePageIndicator_android_background);
         if (background != null) {
             setBackgroundDrawable(background);
@@ -123,12 +129,12 @@ public class CirclePageIndicator extends View implements PageIndicator {
     private void drawCircleBorder(Canvas canvas, float cx, float cy, float radius) {
         Paint paintBorder = new Paint();
         paintBorder.setStyle(Paint.Style.STROKE);
-        paintBorder.setColor(0xFFFFFFFF);
+        paintBorder.setColor(mIndicatorBorderColor);
         paintBorder.setStrokeWidth(mIndicatorBorderWidth);
     
         Paint paintFill = new Paint();
         paintFill.setStyle(Paint.Style.FILL);
-        paintFill.setColor(0xFFFFFFFF);
+        paintFill.setColor(mIndicatorFillColor);
     
         // Рисуем границу
         canvas.drawCircle(cx, cy, radius, paintBorder);
