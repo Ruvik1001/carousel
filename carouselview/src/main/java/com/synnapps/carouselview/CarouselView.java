@@ -60,6 +60,10 @@ public class CarouselView extends FrameLayout {
 
     private ViewPager.PageTransformer pageTransformer;
 
+    public void setIndicatorBackground(Drawable background) {
+        mIndicator.setBackground(background);
+    }
+    
     public CarouselView(Context context) {
         super(context);
     }
