@@ -87,6 +87,8 @@
         <!-- View background -->
         <attr name="android:background" />
 
+        <attr name="borderMyColor" format="color" />
+        <attr name="FillMyColor" format="color" />
         <attr name="indicatorBorderWidth" format="dimension"/>
         <attr name="indicatorCornerRadius" format="dimension"/>
     </declare-styleable>
