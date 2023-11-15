@@ -111,8 +111,6 @@ public class CirclePageIndicator extends View implements PageIndicator {
         // Load new attributes
         mIndicatorBorderWidth = a.getDimension(R.styleable.CirclePageIndicator_indicatorBorderWidth, 0);
         mIndicatorCornerRadius = a.getDimension(R.styleable.CirclePageIndicator_indicatorCornerRadius, 0);
-        mIndicatorBorderColor.setStyle(Style.STROKE);
-        mIndicatorFillColor.setStyle(Style.FILL);
         mIndicatorBorderColor = a.getColor(R.styleable.CirclePageIndicator_borderMyColor, defaultPageColor);
         mIndicatorFillColor = a.getColor(R.styleable.CirclePageIndicator_FillMyColor, defaultPageColor);
 
