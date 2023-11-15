@@ -64,6 +64,8 @@ public class CirclePageIndicator extends View implements PageIndicator {
     private int mActivePointerId = INVALID_POINTER;
     private boolean mIsDragging;
 
+    private float mIndicatorBorderWidth;
+    private float mIndicatorCornerRadius;
 
     public CirclePageIndicator(Context context) {
         this(context, null);
@@ -103,6 +105,10 @@ public class CirclePageIndicator extends View implements PageIndicator {
         mRadius = a.getDimension(R.styleable.CirclePageIndicator_radius, defaultRadius);
         mSnap = a.getBoolean(R.styleable.CirclePageIndicator_snap, defaultSnap);
 
+        // Load new attributes
+        mIndicatorBorderWidth = a.getDimension(R.styleable.CirclePageIndicator_indicatorBorderWidth, 0);
+        mIndicatorCornerRadius = a.getDimension(R.styleable.CirclePageIndicator_indicatorCornerRadius, 0);
+
         Drawable background = a.getDrawable(R.styleable.CirclePageIndicator_android_background);
         if (background != null) {
             setBackgroundDrawable(background);
@@ -114,7 +120,21 @@ public class CirclePageIndicator extends View implements PageIndicator {
         mTouchSlop = ViewConfigurationCompat.getScaledPagingTouchSlop(configuration);
     }
 
-
+    private void drawCircleBorder(Canvas canvas, float cx, float cy, float radius) {
+        Paint paintBorder = new Paint();
+        paintBorder.setStyle(Paint.Style.STROKE);
+        paintBorder.setColor(0xFFFFFFFF);
+        paintBorder.setStrokeWidth(mIndicatorBorderWidth);
+    
+        Paint paintFill = new Paint();
+        paintFill.setStyle(Paint.Style.FILL);
+        paintFill.setColor(0xFFFFFFFF);
+    
+        // Рисуем границу
+        canvas.drawCircle(cx, cy, radius, paintBorder);
+        // Рисуем заливку
+        canvas.drawCircle(cx, cy, radius - mIndicatorBorderWidth, paintFill);
+    }
     public void setCentered(boolean centered) {
         mCentered = centered;
         invalidate();
@@ -198,7 +218,7 @@ public class CirclePageIndicator extends View implements PageIndicator {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
+    
         if (mViewPager == null) {
             return;
         }
@@ -206,12 +226,12 @@ public class CirclePageIndicator extends View implements PageIndicator {
         if (count == 0) {
             return;
         }
-
+    
         if (mCurrentPage >= count) {
             setCurrentItem(count - 1);
             return;
         }
-
+    
         int longSize;
         int longPaddingBefore;
         int longPaddingAfter;
@@ -227,23 +247,23 @@ public class CirclePageIndicator extends View implements PageIndicator {
             longPaddingAfter = getPaddingBottom();
             shortPaddingBefore = getPaddingLeft();
         }
-
+    
         final float threeRadius = mRadius * 3;
         final float shortOffset = shortPaddingBefore + mRadius;
         float longOffset = longPaddingBefore + mRadius;
         if (mCentered) {
             longOffset += ((longSize - longPaddingBefore - longPaddingAfter) / 2.0f) - ((count * threeRadius) / 2.0f);
         }
-
+    
         float dX;
         float dY;
-
+    
         float pageFillRadius = mRadius;
         if (mPaintStroke.getStrokeWidth() > 0) {
             pageFillRadius -= mPaintStroke.getStrokeWidth() / 2.0f;
         }
-
-        //Draw stroked circles
+    
+        // Draw stroked circles
         for (int iLoop = 0; iLoop < count; iLoop++) {
             float drawLong = longOffset + (iLoop * threeRadius);
             if (mOrientation == HORIZONTAL) {
@@ -257,14 +277,12 @@ public class CirclePageIndicator extends View implements PageIndicator {
             if (mPaintPageFill.getAlpha() > 0) {
                 canvas.drawCircle(dX, dY, pageFillRadius, mPaintPageFill);
             }
-
-            // Only paint stroke if a stroke width was non-zero
-            if (pageFillRadius != mRadius) {
-                canvas.drawCircle(dX, dY, mRadius, mPaintStroke);
-            }
+    
+            // Use the new drawCircleBorder method for drawing the stroke
+            drawCircleBorder(canvas, dX, dY, mRadius);
         }
-
-        //Draw the filled circle according to the current scroll
+    
+        // Draw the filled circle according to the current scroll
         float cx = (mSnap ? mSnapPage : mCurrentPage) * threeRadius;
         if (!mSnap) {
             cx += mPageOffset * threeRadius;
@@ -276,8 +294,10 @@ public class CirclePageIndicator extends View implements PageIndicator {
             dX = shortOffset;
             dY = longOffset + cx;
         }
-        canvas.drawCircle(dX, dY, mRadius, mPaintFill);
+        // Use the new drawCircleBorder method for drawing the filled circle
+        drawCircleBorder(canvas, dX, dY, mRadius);
     }
+
 
     public boolean onTouchEvent(android.view.MotionEvent ev) {
         if (super.onTouchEvent(ev)) {
