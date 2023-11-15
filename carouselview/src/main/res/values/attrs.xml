@@ -86,6 +86,9 @@
         <attr name="strokeWidth" />
         <!-- View background -->
         <attr name="android:background" />
+
+        <attr name="indicatorBorderWidth" format="dimension"/>
+        <attr name="indicatorCornerRadius" format="dimension"/>
     </declare-styleable>
 
     <declare-styleable name="CarouselView">
